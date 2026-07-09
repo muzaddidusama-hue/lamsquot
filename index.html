@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAMS POWER Quotation Generator</title>
+  <!-- TailWind CSS for Dashboard -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- PDF.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased font-sans overflow-hidden h-screen">
+
+  <!-- LOGIN VIEW -->
+  <div id="login-view" class="view-route hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950">
+    <div class="w-full max-w-md bg-slate-900/60 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-md relative overflow-hidden">
+      <!-- Decorative solar background glow -->
+      <div class="absolute -right-20 -top-20 w-44 h-44 rounded-full bg-amber-500/10 blur-3xl"></div>
+      <div class="absolute -left-20 -bottom-20 w-44 h-44 rounded-full bg-amber-500/5 blur-3xl"></div>
+      
+      <div class="text-center mb-8 relative z-10">
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/25">
+          <i class="fas fa-solar-panel text-slate-950 text-2xl font-bold"></i>
+        </div>
+        <h2 class="text-2xl font-black font-outfit text-white tracking-tight">LAMS POWER</h2>
+        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">Proposal Generator Login</p>
+      </div>
+
+      <form id="login-form" class="space-y-4 relative z-10">
+        <div id="login-error-msg" class="hidden text-xs text-rose-500 bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg text-center font-semibold">
+          Invalid username or password.
+        </div>
+        <div>
+          <label for="login-username" class="block text-[10px] font-bold text-slate-500 uppercase mb-1">User ID or Auth Email</label>
+          <input type="text" id="login-username" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2.5 text-xs text-slate-200" placeholder="e.g. usama or mail" required>
+        </div>
+        <div>
+          <label for="login-password" class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Password</label>
+          <input type="password" id="login-password" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2.5 text-xs text-slate-200" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-bold py-2.5 rounded-lg text-xs tracking-wide transition shadow-lg shadow-amber-500/10 active:scale-98">
+          Sign In
+        </button>
+      </form>
+
+      <div class="relative flex py-4 items-center relative z-10">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-4 text-[10px] text-slate-500 uppercase font-bold tracking-wider">or</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <button id="btn-google-login" class="w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-200 font-semibold py-2.5 rounded-lg text-xs tracking-wide transition flex items-center justify-center gap-2 shadow-inner relative z-10 active:scale-98">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#EA4335" d="M12 5.04c1.62 0 3.08.56 4.22 1.65l3.15-3.15C17.45 1.74 14.93 1 12 1 7.42 1 3.51 3.63 1.65 7.45l3.86 3C6.43 7.47 9 5.04 12 5.04z"/>
+          <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.27H12v4.51h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.73-4.94 3.73-8.69z"/>
+          <path fill="#FBBC05" d="M5.51 10.45A8.37 8.37 0 0 0 5 12c0 .54.06 1.07.16 1.59l-3.86 3a11.96 11.96 0 0 1 0-9.18l3.86 3.04z"/>
+          <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.03.69-2.35 1.1-4.26 1.1-3 0-5.57-2.43-6.49-5.41l-3.86 3A11.96 11.96 0 0 0 12 23z"/>
+        </svg>
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- WELCOME VIEW -->
+  <div id="welcome-view" class="view-route hidden flex flex-col h-screen bg-slate-950 text-slate-100">
+    <header class="bg-slate-900/85 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between shadow-lg shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-md shadow-amber-500/20">
+          <i class="fas fa-solar-panel text-slate-950 text-xl font-bold"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent font-outfit">LAMS POWER</h1>
+          <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase">Quotation Generator Dashboard</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="#profile" class="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-300">
+          <i class="fas fa-user-gear text-amber-500"></i> Edit Profile
+        </a>
+        <button id="btn-welcome-logout" class="flex items-center gap-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 hover:border-rose-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-rose-400">
+          <i class="fas fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </header>
+
+    <main class="flex-grow overflow-y-auto p-8 max-w-6xl mx-auto w-full space-y-8 select-none">
+      <div class="bg-gradient-to-r from-slate-900 via-slate-900/80 to-slate-950 border border-slate-800 rounded-2xl p-6 relative overflow-hidden shadow-xl">
+        <div class="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-amber-500/10 blur-3xl"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-black text-white tracking-tight font-outfit">Welcome back, <span id="welcome-user-name" class="text-amber-400">Sales Representative</span>!</h2>
+            <p class="text-xs text-slate-400 font-medium mt-1">Manage, edit, and generate your professional solar proposals from one place.</p>
+          </div>
+          <div>
+            <button id="btn-create-quote" class="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-bold px-5 py-3 rounded-xl text-xs tracking-wide transition flex items-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95">
+              <i class="fas fa-plus text-sm"></i> Create New Quotation
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl shadow-inner">
+            <i class="fas fa-file-invoice"></i>
+          </div>
+          <div>
+            <div class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Total Proposals</div>
+            <div class="text-2xl font-black text-white font-outfit mt-0.5" id="stat-total-quotes">0</div>
+          </div>
+        </div>
+        
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl shadow-inner">
+            <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div>
+            <div class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Total Pipeline Value</div>
+            <div class="text-lg font-black text-white font-outfit mt-0.5" id="stat-total-val">BDT 0</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl shadow-inner">
+            <i class="fas fa-calendar-days"></i>
+          </div>
+          <div>
+            <div class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Last Edited</div>
+            <div class="text-xs font-bold text-white font-outfit mt-1.5" id="stat-last-edit">N/A</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-850 rounded-2xl shadow-xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-850 flex justify-between items-center bg-slate-900/60">
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2"><i class="fas fa-clock-rotate-left text-amber-500"></i> Recent Quotations</h3>
+          <div class="flex items-center gap-3">
+            <button id="btn-delete-selected" class="hidden bg-rose-500/10 hover:bg-rose-500/20 text-rose-450 border border-rose-500/20 hover:border-rose-500/30 px-3.5 py-1.5 rounded-lg text-xs font-bold transition duration-150 active:scale-95 flex items-center gap-1.5">
+              <i class="fas fa-trash-can"></i> Delete Selected (<span id="delete-selected-count">0</span>)
+            </button>
+            <span class="text-[10px] bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-full text-slate-400 font-bold uppercase tracking-wider" id="quote-count-badge">0 saved</span>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-950/40 text-slate-400 font-bold border-b border-slate-850 uppercase tracking-wider text-[10px]">
+                <th class="py-4 px-6 w-12"><input type="checkbox" id="check-all-quotes" class="rounded border-slate-700 bg-slate-950 text-amber-500 focus:ring-0 focus:ring-offset-0 cursor-pointer"></th>
+                <th class="py-4 px-6">Ref Code</th>
+                <th class="py-4 px-6">Customer</th>
+                <th class="py-4 px-6">System Capacity</th>
+                <th class="py-4 px-6">Total Price</th>
+                <th class="py-4 px-6">Last Modified</th>
+                <th class="py-4 px-6 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="quotations-list-body" class="divide-y divide-slate-850">
+              <tr>
+                <td colspan="6" class="py-12 text-center text-slate-500 font-semibold italic">No quotations found. Click "Create New Quotation" to start.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PROFILE VIEW -->
+  <div id="profile-view" class="view-route hidden flex flex-col h-screen bg-slate-950 text-slate-100">
+    <header class="bg-slate-900/85 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between shadow-lg shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-md shadow-amber-500/20">
+          <i class="fas fa-solar-panel text-slate-950 text-xl font-bold"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent font-outfit">LAMS POWER</h1>
+          <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase">User Profile Management</p>
+        </div>
+      </div>
+      
+      <a href="#welcome" class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-300">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </header>
+
+    <main class="flex-grow overflow-y-auto p-8 max-w-xl mx-auto w-full select-none">
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden space-y-6">
+        <div class="flex items-center gap-4 border-b border-slate-800 pb-5">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500 text-slate-950 font-black flex items-center justify-center text-2xl" id="profile-page-avatar">
+            U
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white" id="profile-page-display-name">Loading Profile...</h3>
+            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Edit Salesperson Credentials & Signature Footer</p>
+          </div>
+        </div>
+
+        <form id="profile-page-form" class="space-y-4">
+          <div id="profile-save-success-msg" class="hidden text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-lg text-center font-bold">
+            <i class="fas fa-check-circle mr-1"></i> Profile details updated and saved successfully!
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="profile-page-name" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Full Name (Signature)</label>
+              <input type="text" id="profile-page-name" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="profile-page-title" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Designation</label>
+              <input type="text" id="profile-page-title" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="profile-page-mobile" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Mobile No.</label>
+              <input type="text" id="profile-page-mobile" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="profile-page-email" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Email Address (Business)</label>
+              <input type="email" id="profile-page-email" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <div>
+            <label for="profile-page-web" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Company Website</label>
+            <input type="text" id="profile-page-web" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+          </div>
+
+          <div class="relative flex py-2 items-center">
+            <div class="flex-grow border-t border-slate-800"></div>
+            <span class="flex-shrink mx-4 text-[9px] text-slate-500 uppercase font-black tracking-widest">Authentication Credentials</span>
+            <div class="flex-grow border-t border-slate-800"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="profile-page-auth-email" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Authentication Mail</label>
+              <input type="email" id="profile-page-auth-email" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="profile-page-password" class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5">Login Password</label>
+              <input type="password" id="profile-page-password" class="w-full bg-slate-950 border border-slate-800 focus:border-amber-500 focus:outline-none rounded px-3 py-2 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <div class="pt-4 flex gap-3">
+            <a href="#welcome" class="flex-1 bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-250 font-bold py-2.5 rounded-lg text-xs tracking-wide transition text-center shadow-inner active:scale-98">
+              Cancel
+            </a>
+            <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black py-2.5 rounded-lg text-xs tracking-wide transition shadow-lg shadow-amber-500/10 active:scale-98">
+              Save Profile
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- EDITOR VIEW -->
+  <div id="editor-view" class="view-route hidden flex flex-col h-screen overflow-hidden">
+    <header class="bg-slate-900/85 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between z-10 shrink-0 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-md shadow-amber-500/20">
+        <i class="fas fa-solar-panel text-slate-950 text-xl font-bold"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent font-outfit">LAMS POWER</h1>
+        <p class="text-xs text-slate-400 font-semibold tracking-wider uppercase">Quotation Generator</p>
+      </div>
+    </div>
+
+    <!-- Background PDF status / Action controls -->
+    <div class="flex items-center gap-6">
+      <div id="bg-status" class="text-xs flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-lg">
+        <span class="text-amber-500 animate-pulse"><i class="fas fa-spinner fa-spin mr-1"></i> Loading PDF Background...</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="#welcome" class="bg-slate-850 hover:bg-slate-800 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fas fa-house"></i> Dashboard
+        </a>
+
+        <button id="btn-save-quote" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-indigo-500/15">
+          <i class="fas fa-save"></i> Save Proposal
+        </button>
+
+        <label for="pdf-uploader" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer border border-slate-700 transition flex items-center gap-1.5 shadow-inner">
+          <i class="fas fa-upload"></i> Upload Pad PDF
+          <input type="file" id="pdf-uploader" accept="application/pdf" class="hidden">
+        </label>
+        
+        <button id="btn-reset" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 rounded-lg text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+          <i class="fas fa-undo"></i> Reset
+        </button>
+
+        <button id="btn-print" class="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-bold px-5 py-2 rounded-lg text-xs tracking-wide transition flex items-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95">
+          <i class="fas fa-print text-sm"></i> Generate PDF / Print
+        </button>
+
+        <!-- USER PROFILE DROP-DOWN -->
+        <div class="relative" id="user-menu-wrapper">
+          <button id="user-menu-btn" class="flex items-center gap-2 bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+            <div class="w-5 h-5 rounded-full bg-amber-500 text-slate-950 font-bold flex items-center justify-center overflow-hidden" id="user-avatar">
+              U
+            </div>
+            <span class="text-slate-300" id="user-display-name">Loading...</span>
+            <i class="fas fa-chevron-down text-[10px] text-slate-500"></i>
+          </button>
+          
+          <!-- Dropdown menu -->
+          <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-xl z-20 py-1.5 select-none animate-fadeIn">
+            <a href="#profile" class="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-white flex items-center gap-2 transition">
+              <i class="fas fa-user-gear text-slate-500 text-sm"></i> Profile Settings
+            </a>
+            <hr class="border-slate-800 my-1">
+            <button id="btn-logout" class="w-full text-left px-4 py-2 text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition">
+              <i class="fas fa-right-from-bracket text-sm"></i> Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="flex flex-1 overflow-hidden">
+    <!-- LEFT SIDEBAR: INPUT CONTROL PANEL -->
+    <section class="w-[45%] min-w-[480px] bg-slate-900 border-r border-slate-800 flex flex-col overflow-y-auto">
+      
+      <!-- Editor Navigation Tabs -->
+      <nav class="flex border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
+        <button data-tab="tab-general" class="tab-btn active flex-1 py-3 px-4 text-xs font-bold text-center border-b-2 border-amber-500 text-amber-400 transition hover:bg-slate-850">
+          <i class="fas fa-file-invoice block text-base mb-1"></i> General & Cover
+        </button>
+        <button data-tab="tab-overview" class="tab-btn flex-1 py-3 px-4 text-xs font-bold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition hover:bg-slate-850">
+          <i class="fas fa-boxes block text-base mb-1"></i> Offer Box
+        </button>
+        <button data-tab="tab-items" class="tab-btn flex-1 py-3 px-4 text-xs font-bold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition hover:bg-slate-850">
+          <i class="fas fa-list-check block text-base mb-1"></i> Bill of Materials
+        </button>
+        <button data-tab="tab-specs" class="tab-btn flex-1 py-3 px-4 text-xs font-bold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition hover:bg-slate-850">
+          <i class="fas fa-sliders block text-base mb-1"></i> Specs & Rules
+        </button>
+        <button data-tab="tab-settings" class="tab-btn flex-1 py-3 px-4 text-xs font-bold text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition hover:bg-slate-850">
+          <i class="fas fa-cog block text-base mb-1"></i> Margins & Scale
+        </button>
+      </nav>
+
+      <!-- Editor Content Panes -->
+      <div class="p-6 space-y-6 flex-1">
+        
+        <!-- TAB 1: GENERAL & COVER -->
+        <div id="tab-general" class="tab-content space-y-6">
+          <h2 class="text-lg font-bold text-amber-400 font-outfit border-b border-slate-850 pb-2">Page 1: Proposal Info & Cover Letter</h2>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Reference Code</label>
+              <div class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-400 font-mono text-sm shadow-inner flex items-center justify-between">
+                <span id="field-ref-code">Generating...</span>
+                <span class="text-[10px] text-slate-500 font-sans uppercase font-bold">Auto-Gen</span>
+              </div>
+            </div>
+            <div>
+              <label for="input-date" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Proposal Date</label>
+              <input type="text" id="input-date" placeholder="DD/MM/YYYY" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-sm text-slate-100 shadow-inner transition">
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-user-tie text-amber-500"></i> Customer Details</h3>
+            <div class="space-y-3 bg-slate-950/50 p-4 rounded-xl border border-slate-850 shadow-inner">
+              <div>
+                <label for="input-cust-name" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Customer Name</label>
+                <input type="text" id="input-cust-name" placeholder="E.g., Al Mahmud" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-sm text-slate-100 shadow-inner transition">
+              </div>
+              <div>
+                <label for="input-cust-addr" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Customer Address / Location</label>
+                <textarea id="input-cust-addr" rows="2" placeholder="E.g., Mirpur 10, Dhaka." class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-sm text-slate-100 shadow-inner transition resize-none"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="input-capacity" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Solar System Capacity</label>
+              <input type="text" id="input-capacity" placeholder="E.g., 400W" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-sm text-slate-100 shadow-inner transition font-medium">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Auto Subject Preview</label>
+              <div id="subject-preview" class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-lg border border-slate-850 italic truncate">
+                Sub: Price Proposal for ...
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="input-cover-body" class="block text-xs font-semibold uppercase text-slate-400 mb-2">Cover Letter Greeting Body</label>
+            <textarea id="input-cover-body" rows="4" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2.5 text-sm text-slate-100 shadow-inner transition leading-relaxed"></textarea>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-address-card text-amber-500"></i> Active Salesperson Setup</h3>
+            <div class="grid grid-cols-2 gap-3 bg-slate-950/50 p-4 rounded-xl border border-slate-850 shadow-inner">
+              <div>
+                <label for="sales-name" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Sales Representative Name</label>
+                <input type="text" id="sales-name" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+              <div>
+                <label for="sales-title" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Sales Title / Designation</label>
+                <input type="text" id="sales-title" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+              <div>
+                <label for="sales-mobile" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Mobile Number</label>
+                <input type="text" id="sales-mobile" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+              <div>
+                <label for="sales-email" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Email (Mail)</label>
+                <input type="email" id="sales-email" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+              <div>
+                <label for="sales-auth-email" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Authentication Email</label>
+                <input type="email" id="sales-auth-email" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+              <div>
+                <label for="sales-password" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Login Password</label>
+                <input type="password" id="sales-password" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: OFFER BOX & TERMS -->
+        <div id="tab-overview" class="tab-content space-y-6 hidden">
+          <h2 class="text-lg font-bold text-amber-400 font-outfit border-b border-slate-850 pb-2">Page 2: Pricing Details & Payment Terms</h2>
+          
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-list text-amber-500"></i> Offer Overview Box Parameters</h3>
+            <div class="space-y-3 bg-slate-950/50 p-4 rounded-xl border border-slate-850 shadow-inner">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="input-overview-capacity" class="block text-xs font-semibold uppercase text-slate-400 mb-1">System Watt/Kilowatt (Header)</label>
+                  <input type="text" id="input-overview-capacity" placeholder="E.g., 400W or 3.6kW" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Origin (Immutable)</label>
+                  <div class="bg-slate-900 border border-slate-850 rounded-lg px-3 py-2 text-xs text-slate-400 font-semibold shadow-inner">
+                    China
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="input-param-panel" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Panel Watt/Model</label>
+                  <input type="text" id="input-param-panel" placeholder="E.g., 550Watt Mono" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+                </div>
+                <div>
+                  <label for="input-param-inverter" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Inverter Watt/Model</label>
+                  <input type="text" id="input-param-inverter" placeholder="E.g., 400Watt" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label for="input-param-price" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Total System Price (Tk)</label>
+                  <input type="number" id="input-param-price" placeholder="E.g., 56000" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded-lg px-3 py-2 text-xs text-slate-100 transition font-mono">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Auto Price In Words Preview</label>
+                <div id="words-preview" class="text-xs text-slate-400 bg-slate-950 p-2.5 rounded-lg border border-slate-850 italic leading-relaxed">
+                  (Zero taka only)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-hand-holding-dollar text-amber-500"></i> Payment Terms Rules (Page 2)</h3>
+            <div id="terms-editor-container" class="space-y-2">
+              <!-- Dynamic terms items loaded here -->
+            </div>
+            <button id="btn-add-term" class="mt-2 text-xs font-bold text-amber-400 hover:text-amber-300 transition flex items-center gap-1">
+              <i class="fas fa-plus-circle"></i> Add Payment Term Rule
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 3: BILL OF MATERIALS -->
+        <div id="tab-items" class="tab-content space-y-6 hidden">
+          <div class="flex items-center justify-between border-b border-slate-850 pb-2">
+            <h2 class="text-lg font-bold text-amber-400 font-outfit">Page 3: Dynamic Item Builder</h2>
+            <button id="btn-add-item" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-md shadow-amber-500/10">
+              <i class="fas fa-plus"></i> Add Item Row
+            </button>
+          </div>
+
+          <div class="space-y-4">
+            <p class="text-xs text-slate-400 leading-normal">
+              Manage items shown on Page 3. Total price matches the sum of items automatically.
+            </p>
+            <div id="item-rows-container" class="space-y-3">
+              <!-- Dynamic item cards go here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SPECS & RULES -->
+        <div id="tab-specs" class="tab-content space-y-6 hidden">
+          <h2 class="text-lg font-bold text-amber-400 font-outfit border-b border-slate-850 pb-2">Page 4: Technical Specifications & Warranties</h2>
+          
+          <div class="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl space-y-2">
+            <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+              <i class="fas fa-shield-halved"></i>
+              <span>Active Warranties & Brand Mapping Rules</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              We monitor Page 3 items to apply dynamic constraints:
+            </p>
+            <ul class="text-[11px] text-slate-400 list-disc list-inside space-y-1 ml-1 leading-normal">
+              <li>Solar Module Warranty covers 20 Years.</li>
+              <li>If "Battery" has non-zero quantity, display Inverter (3y) & Battery (5y) warranties on Page 3/4.</li>
+              <li>If "Battery" is empty/removed, hide inverter warranty elements on Page 3/4.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-microchip text-amber-500"></i> Agency Texts Preview</h3>
+            <div class="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-850">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">PV Module Agency Text</span>
+                <p id="preview-agency-pv" class="text-xs text-slate-300 italic bg-slate-900/60 p-2 rounded border border-slate-800 leading-relaxed">
+                  Loading...
+                </p>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Inverter Agency Text</span>
+                <p id="preview-agency-inverter" class="text-xs text-slate-300 italic bg-slate-900/60 p-2 rounded border border-slate-800 leading-relaxed">
+                  Loading...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-300 mb-3 flex items-center gap-1.5"><i class="fas fa-clipboard-list text-amber-500"></i> Technical Spec Parameters</h3>
+            <div id="specs-editor-container" class="space-y-2">
+              <!-- Dynamic specifications loaded here -->
+            </div>
+            <button id="btn-add-spec" class="mt-2 text-xs font-bold text-amber-400 hover:text-amber-300 transition flex items-center gap-1">
+              <i class="fas fa-plus-circle"></i> Add Specification Row
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 5: MARGINS & SCALE -->
+        <div id="tab-settings" class="tab-content space-y-6 hidden">
+          <h2 class="text-lg font-bold text-amber-400 font-outfit border-b border-slate-850 pb-2">Print Layout Spacing & Content Scale</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Calibrate layout spacing to match your local printer offset, scale content size, and adjust preview zoom.
+          </p>
+
+          <div class="space-y-5 bg-slate-950/50 p-4 rounded-xl border border-slate-850 shadow-inner">
+            <!-- Margins controls -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="range-margin-top" class="text-xs font-semibold uppercase text-slate-400">Top Content Clearance (Header)</label>
+                <span id="val-margin-top" class="text-xs font-mono text-amber-400 font-bold">55mm</span>
+              </div>
+              <input type="range" id="range-margin-top" min="20" max="70" value="55" class="w-full accent-amber-500">
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="range-margin-bottom" class="text-xs font-semibold uppercase text-slate-400">Bottom Content Clearance (Footer)</label>
+                <span id="val-margin-bottom" class="text-xs font-mono text-amber-400 font-bold">60mm</span>
+              </div>
+              <input type="range" id="range-margin-bottom" min="20" max="80" value="60" class="w-full accent-amber-500">
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="range-margin-side" class="text-xs font-semibold uppercase text-slate-400">Side Margins</label>
+                <span id="val-margin-side" class="text-xs font-mono text-amber-400 font-bold">20mm</span>
+              </div>
+              <input type="range" id="range-margin-side" min="10" max="35" value="20" class="w-full accent-amber-500">
+            </div>
+
+            <hr class="border-slate-850 my-2">
+
+            <!-- Content Font Scale Slider -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="range-content-scale" class="text-xs font-semibold uppercase text-amber-400 flex items-center gap-1">
+                  <i class="fas fa-arrows-alt-h text-[10px]"></i> Printed Content Scale
+                </label>
+                <span id="val-content-scale" class="text-xs font-mono text-amber-400 font-bold">100%</span>
+              </div>
+              <input type="range" id="range-content-scale" min="70" max="130" value="100" class="w-full accent-amber-500">
+              <span class="text-[10px] text-slate-500 mt-1 block">Reduces base font size to fit long cover letters or BOM tables on a single page.</span>
+            </div>
+
+            <!-- Preview Scale Slider -->
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label for="range-preview-zoom" class="text-xs font-semibold uppercase text-slate-400 flex items-center gap-1">
+                  <i class="fas fa-magnifying-glass text-[10px]"></i> Preview Screen Zoom
+                </label>
+                <span id="val-preview-zoom" class="text-xs font-mono text-slate-400 font-bold">75%</span>
+              </div>
+              <input type="range" id="range-preview-zoom" min="30" max="120" value="75" class="w-full accent-slate-500">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE: LIVE A4 PRINT PREVIEW -->
+    <section class="flex-1 bg-slate-800 flex flex-col overflow-hidden relative">
+      
+      <!-- Preview Controls Panel -->
+      <div id="preview-controls-panel" class="bg-slate-900 border-b border-slate-800/80 px-6 py-2 flex items-center justify-between shrink-0 shadow-sm select-none z-10">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Dynamic Layout Live Preview</span>
+        </div>
+        
+        <!-- Zoom Controls -->
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-slate-400 font-medium">Zoom: <span id="zoom-label" class="font-mono text-amber-400">75%</span></span>
+          <input type="range" id="zoom-slider" min="30" max="120" value="75" class="w-28 accent-amber-500 h-1 rounded-lg">
+          <button id="zoom-fit" class="text-xs text-slate-400 hover:text-white transition" title="Fit to width">
+            <i class="fas fa-expand-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Preview Pages Scroller -->
+      <div class="flex-1 overflow-y-auto p-8 flex flex-col items-center gap-8 relative select-none">
+        
+        <!-- Transform Wrapper for scaling -->
+        <div id="pages-zoom-wrapper" class="origin-top transition-transform duration-100 flex flex-col items-center gap-8" style="transform: scale(0.75);">
+          
+          <!-- ================= PAGE 1 ================= -->
+          <div class="a4-page shadow-2xl relative" id="preview-page-1">
+            <div class="a4-page-bg"></div>
+            <div class="a4-page-content">
+              
+              <!-- Reference and Date Area -->
+              <div class="flex flex-col text-[12.5px] leading-relaxed mb-6 font-semibold">
+                <div>Ref: <span id="preview-ref-code" class="font-bold">LAMS/OFF/JUN/242026</span></div>
+                <div>Date: <span id="preview-date" class="font-bold">24/06/2026</span></div>
+              </div>
+
+              <!-- Customer Block -->
+              <div class="mb-6 text-[12.5px] leading-relaxed">
+                <span class="font-bold block">To</span>
+                <span id="preview-cust-name" class="block font-bold">Al Mahmud</span>
+                <span id="preview-cust-addr" class="block text-slate-800 whitespace-pre-line leading-relaxed">Mirpur 10, Dhaka.</span>
+              </div>
+
+              <!-- Subject Line -->
+              <div class="mb-6">
+                <h3 id="preview-subject" class="font-bold text-[13px] text-slate-900">
+                  Sub: Price Proposal for 400W Solar System Setup.
+                </h3>
+              </div>
+
+              <!-- Cover Letter Greeting Body -->
+              <div id="preview-cover-body" class="text-[12.5px] text-slate-800 leading-relaxed mb-auto space-y-4 text-justify">
+                <!-- Loaded dynamically -->
+              </div>
+
+              <!-- Sign-off Area -->
+              <div class="mt-8 pt-4 text-[12.5px] leading-relaxed">
+                <p class="mb-4">Sincerely,</p>
+                <p class="font-bold text-slate-900" id="preview-sales-name">Usama Bin Hasan</p>
+                <p class="text-slate-800" id="preview-sales-title">Team Lead - Brand and Promotion, LAMS POWER</p>
+                <p class="text-slate-800">Mobile: <span id="preview-sales-mobile">01521546444</span></p>
+                <p class="text-slate-800">Mail: <span id="preview-sales-email">ubh.muzaddid17@gmail.com</span></p>
+                <p class="text-slate-800">Web: <a href="http://www.lamspowerbd.com" target="_blank" class="text-blue-700 underline" id="preview-sales-web">www.lamspowerbd.com</a></p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ================= PAGE 2 ================= -->
+          <div class="a4-page shadow-2xl relative" id="preview-page-2">
+            <div class="a4-page-bg"></div>
+            <div class="a4-page-content">
+              
+              <!-- Double Border Parameter Box -->
+              <div class="parameter-box mb-8">
+                <div id="preview-overview-header" class="parameter-box-header font-outfit">
+                  3.6 KiloWatt Complete Off-Grid-Hybrid Solar System Details
+                </div>
+                <div class="parameter-box-body">
+                  <div class="mb-1">Panel Type: <span id="preview-param-panel">550Watt Mono</span></div>
+                  <div class="mb-1">Origin: China</div>
+                  <div class="mb-1">Inverter: <span id="preview-param-inverter">400Watt</span></div>
+                  <div class="mb-1">Total Price: <span id="preview-total-price">56,000/-</span></div>
+                  <div class="mb-1" id="preview-words-price">(Fifty Six Thousand taka only)</div>
+                  <div class="text-[12px] italic mt-2">Note: Price Without Vat & Tax</div>
+                </div>
+              </div>
+
+              <!-- Payment Terms -->
+              <div class="mt-auto">
+                <h3 class="text-[12.5px] font-bold text-slate-900 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1">
+                  <u>Payment Terms:</u>
+                </h3>
+                <ol id="preview-terms-list" class="text-[12px] text-slate-800 space-y-2 list-decimal list-inside pl-1 leading-relaxed">
+                  <!-- Dynamic terms list here -->
+                </ol>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ================= PAGE 3 ================= -->
+          <div class="a4-page shadow-2xl relative" id="preview-page-3">
+            <div class="a4-page-bg"></div>
+            <div class="a4-page-content">
+              
+              <div class="mb-4 text-center">
+                <h3 class="text-[16px] font-bold text-black uppercase tracking-wide">
+                  <u>Offer Details:</u>
+                </h3>
+              </div>
+
+              <!-- Table Container -->
+              <div class="mb-4 overflow-hidden bg-white">
+                <table class="table-quotation">
+                  <thead>
+                    <tr>
+                      <th class="py-2 px-3 w-[25%]">Item name</th>
+                      <th class="py-2 px-3 w-[15%]">Brand</th>
+                      <th class="py-2 px-3 w-[25%]">Model</th>
+                      <th class="py-2 px-3 w-[15%]">Capacity</th>
+                      <th class="py-2 px-3 w-[10%] text-center">Quantity</th>
+                      <th class="py-2 px-3 w-[10%] text-right">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody id="preview-items-table" class="text-slate-800">
+                    <!-- Dynamic table rows here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="text-[12px] font-bold mb-6">
+                **Note: The price is excluding VAT and TAX
+              </div>
+
+              <!-- Page 3 Payment terms and warranties -->
+              <div class="space-y-4">
+                <div>
+                  <h3 class="text-[12.5px] font-bold text-slate-900 mb-1">
+                    <u>Payment Terms:</u>
+                  </h3>
+                  <p class="text-[12px] text-slate-800 leading-relaxed pl-1" id="preview-p3-payment-term">
+                    1. 100% Payment Should be paid in advance with work order by A/C payee Cheque in favor of "LAMS POWER".
+                  </p>
+                </div>
+
+                <div class="space-y-2">
+                  <p class="text-[12px] text-slate-800 leading-normal">
+                    <u><strong>Solar Warranty:</strong></u> 20years power output warranty. Warranty does not cover damage from tampering, burning, broken, unskilled handling vandalism and natural calamities.
+                  </p>
+                  
+                  <p id="p3-warranty-inverter" class="text-[12px] text-slate-800 leading-normal">
+                    <u><strong>Inverter Warranty:</strong></u> 3years warranty. Warranty does not cover damage from tampering, burning, broken, unskilled handling vandalism and natural calamities.
+                  </p>
+
+                  <p id="p3-warranty-battery" class="text-[12px] text-slate-800 leading-normal">
+                    <u><strong>Lithium Battery:</strong></u> 5years warranty provided by manufacturer company.
+                  </p>
+
+                  <p class="text-[12px] text-slate-800 leading-normal">
+                    <u><strong>Validity:</strong></u> This offer is valid for next 15days from the date of issue.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ================= PAGE 4 ================= -->
+          <div class="a4-page shadow-2xl relative" id="preview-page-4">
+            <div class="a4-page-bg"></div>
+            <div class="a4-page-content">
+              
+              <div class="mb-4 text-center">
+                <h3 class="text-[16px] font-bold text-black uppercase tracking-wide">
+                  <u>System Description:</u>
+                </h3>
+              </div>
+
+              <!-- Tech Spec and Warranty System Collapsed Table -->
+              <div class="overflow-hidden bg-white mb-6">
+                <table class="table-quotation table-orange-header">
+                  <tbody>
+                    <tr>
+                      <th colspan="2" class="py-2 px-3 text-white text-center font-bold">Basic Solar System DATA with Quality, Warranty & After Sales Service</th>
+                    </tr>
+                    <tr>
+                      <td class="py-2 px-3 font-bold w-[30%]">PV Module Description</td>
+                      <td class="py-2 px-3" id="agency-pv-text">LAMS will install AE SOLAR mono Panel and is the Agent of AE Solar panel for Bangladesh</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 px-3 font-bold">Inverters</td>
+                      <td class="py-2 px-3" id="agency-inverter-text">LAMS is the Agent of Talegent inverter for Bangladesh</td>
+                    </tr>
+                    <tr>
+                      <th colspan="2" class="py-2 px-3 text-white text-center font-bold">Warranty System</th>
+                    </tr>
+                    <tr>
+                      <td class="py-2 px-3 font-bold">Solar Panel</td>
+                      <td class="py-2 px-3">5 Years full replacement (Workmanship), total 20 years power out warranty. The first 5 years 80% power output, output will gradually decrease in the following years (will depend on the weather). Warranty does not cover damage from burning, broken, tampering, unskilled handling vandalism & natural calamities</td>
+                    </tr>
+                    <tr id="page4-inverter-warranty-row">
+                      <td class="py-2 px-3 font-bold">Inverter</td>
+                      <td class="py-2 px-3">1 year replacement warranty, 03 years of service warranty. Warranty does not cover damage from burning, broken, tampering, unskilled handling vandalism & natural calamities</td>
+                    </tr>
+                    <tr id="page4-battery-warranty-row">
+                      <td class="py-2 px-3 font-bold">Lithium Battery</td>
+                      <td class="py-2 px-3">5 Years manufacturer's warranty</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+  </div>
+
+  <!-- Firebase SDK and Configuration -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="config.js"></script>
+
+  <!-- Script initialization -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+/* Custom Typography & Dynamic CSS Variables */
+:root {
+  --margin-top: 55mm;
+  --margin-bottom: 60mm;
+  --margin-side: 20mm;
+  --content-scale: 1; /* Default scale factor */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-outfit {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom Scrollbars for dark sidebar dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; /* slate-900 */
+}
+::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b; /* amber-500 */
+}
+
+/* Inputs styling focus */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+}
+
+/* Tab button state styling */
+.tab-btn.active {
+  color: #fbbf24; /* amber-400 */
+  border-color: #f59e0b; /* amber-500 */
+  background-color: rgba(30, 41, 59, 0.4);
+}
+
+/* Interactive item builder list animations */
+.item-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.item-card:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================================================================
+   A4 VISUAL PRINT LAYOUT PREVIEW
+   ========================================================================== */
+
+/* The A4 sheets (210mm x 297mm) */
+.a4-page {
+  width: 210mm;
+  height: 297mm;
+  position: relative;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Base LAMS POWER background letterhead template */
+.a4-page-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Fallback letterhead design when PDF fails to load */
+.a4-page.fallback-bg .a4-page-bg {
+  background-image: none !important;
+  border: 1px solid #e2e8f0;
+}
+
+.a4-page.fallback-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(to right, #f97316, #fbbf24);
+  z-index: 2;
+}
+
+/* Inside container wrapping proposal content - EXACT MATHEMATICAL BOUNDS TO PREVENT SPILL */
+.a4-page-content {
+  position: absolute !important;
+  top: var(--margin-top) !important;
+  left: var(--margin-side) !important;
+  width: calc(210mm - (2 * var(--margin-side))) !important;
+  height: calc(297mm - var(--margin-top) - var(--margin-bottom)) !important;
+  z-index: 10 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  font-size: calc(12.5px * var(--content-scale)) !important;
+  line-height: 1.6 !important;
+  color: #000000 !important;
+  font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+}
+
+/* Enforce child elements stay within container horizontal bounds */
+.a4-page-content * {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Page 2 Parameter Box (Orange Double Border & Orange Filled Header) */
+.parameter-box {
+  border: 3.5px double #f97316; /* Orange double border */
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+  margin: 0 auto;
+  width: 90%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.parameter-box-header {
+  background-color: #f97316; /* Orange fill */
+  color: #000000; /* Black text */
+  font-weight: 700;
+  text-align: center;
+  padding: 8px 12px;
+  border-bottom: 2px solid #f97316;
+  font-size: calc(13px * var(--content-scale)) !important;
+}
+
+.parameter-box-body {
+  padding: 16px 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: calc(12.5px * var(--content-scale)) !important;
+  line-height: 2.1; /* Spacious line height matching sample */
+  color: #000000;
+}
+
+/* Table styles inside preview - Collapsed Black Borders & Forced Text Wrapping */
+.table-quotation {
+  width: 100% !important;
+  table-layout: fixed !important; /* Force strict column sizing bounds */
+  border-collapse: collapse !important;
+  border: 1.5px solid #000000 !important;
+}
+
+.table-quotation th, .table-quotation td {
+  border: 1px solid #000000 !important;
+  padding: 5px 8px !important;
+  font-size: calc(12px * var(--content-scale)) !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
+  font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+  word-wrap: break-word !important; /* Wrap long words (like serial codes or capacities) */
+  word-break: break-all !important;
+  white-space: normal !important; /* Wrap spaces and hyphens */
+}
+
+.table-quotation th {
+  background-color: #e2e8f0 !important; /* Slate grey background header */
+  font-weight: 700 !important;
+  text-align: center !important;
+}
+
+/* Page 4 Orange Header Matrix Row headers */
+.table-orange-header th {
+  background-color: #f97316 !important; /* Orange background */
+  color: #ffffff !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  padding: 7px 10px !important;
+  font-size: calc(12.5px * var(--content-scale)) !important;
+}
+
+.table-quotation td.font-bold {
+  font-weight: 700 !important;
+}
+
+/* Custom Dropdown Animations & Active Transition Overlays */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ==========================================================================
+   PRINT MEDIA STYLESHEET
+   ========================================================================== */
+@media print {
+  /* Hide the dashboard, header, preview control bar, and interactive buttons */
+  header,
+  nav,
+  section:first-of-type,
+  .bg-slate-900,
+  button,
+  input[type="range"],
+  #login-view,
+  #welcome-view,
+  #profile-view,
+  #preview-controls-panel {
+    display: none !important;
+  }
+
+  body, html {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    width: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Reset layout wrapper container rules */
+  main, #editor-view {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: auto !important;
+    position: static !important;
+  }
+
+  /* Flatten layout components and remove scrolling and flex grids */
+  section:last-of-type,
+  section:last-of-type > div {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  #pages-zoom-wrapper {
+    transform: none !important;
+    gap: 0 !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Ensure background graphics are printed */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Page boundaries definition */
+  @page {
+    size: A4 portrait;
+    margin: 0 !important; /* Zero margins to allow background to print edge-to-edge */
+  }
+
+  .a4-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: #ffffff !important;
+    position: relative !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Split exactly across page boundaries, leaving NO trailing blank pages */
+  .a4-page:not(:last-child) {
+    page-break-after: always !important;
+  }
+}
