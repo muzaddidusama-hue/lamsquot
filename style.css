@@ -103,8 +103,8 @@ input:focus, textarea:focus, select:focus {
   position: absolute !important;
   top: var(--margin-top) !important;
   left: var(--margin-side) !important;
-  width: calc(210mm - (2 * var(--margin-side))) !important;
-  height: calc(297mm - var(--margin-top) - var(--margin-bottom)) !important;
+  width: calc(100% - (2 * var(--margin-side))) !important;
+  height: calc(100% - var(--margin-top) - var(--margin-bottom)) !important;
   z-index: 10 !important;
   box-sizing: border-box !important;
   display: flex !important;
@@ -277,9 +277,9 @@ input:focus, textarea:focus, select:focus {
   }
 
   .a4-page {
-    width: 210mm !important;
-    height: 297mm !important;
-    margin: 0 !important;
+    width: 195mm !important;
+    height: 275mm !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
