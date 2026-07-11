@@ -27,7 +27,7 @@ To store user logins and quotations in the cloud (so they are saved permanently 
        appId: "..."
      };
      ```
-   - Copy these credentials, open the `config.js` file in your project folder, and paste them inside the `firebaseConfig` object. Save the file.
+   - Create a copy of the `config.example.js` file named `config.js`. Open `config.js` and paste these credentials inside the `firebaseConfig` object, then save the file. (Note: `config.js` is automatically untracked and excluded in `.gitignore` to ensure your credentials are never pushed to GitHub).
 
 3. **Enable Firestore Database:**
    - In the left sidebar of the Firebase Console, click **Build** -> **Firestore Database**.
