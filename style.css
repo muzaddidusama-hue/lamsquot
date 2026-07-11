@@ -213,7 +213,7 @@ input:focus, textarea:focus, select:focus {
    PRINT MEDIA STYLESHEET
    ========================================================================== */
 @media print {
-  /* Explicitly remove all non-print layouts from display flow */
+  /* Explicitly remove all non-print layouts from display flow and prevent page-breaks */
   #login-view,
   #welcome-view,
   #profile-view,
@@ -226,6 +226,10 @@ input:focus, textarea:focus, select:focus {
   button,
   input[type="range"] {
     display: none !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    break-before: avoid !important;
+    break-after: avoid !important;
   }
 
   /* Reset and flatten all parent containers to strictly static block-level to enable page breaks */
@@ -234,8 +238,7 @@ input:focus, textarea:focus, select:focus {
   #editor-view,
   main,
   #editor-preview,
-  #preview-viewport,
-  #pages-zoom-wrapper {
+  #preview-viewport {
     display: block !important;
     position: static !important;
     float: none !important;
@@ -248,12 +251,28 @@ input:focus, textarea:focus, select:focus {
     border: none !important;
     box-shadow: none !important;
     color: #000000 !important;
-    transform: none !important;
-    gap: 0 !important;
   }
 
   html, body {
     background-color: #ffffff !important;
+  }
+
+  /* Specific parent wrapper targeting to support horizontal centering and scale-down */
+  #pages-zoom-wrapper {
+    display: block !important;
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: scale(0.99) !important;
+    transform-origin: top center !important;
+    gap: 0 !important;
   }
 
   /* Ensure background graphics are printed */
@@ -268,10 +287,11 @@ input:focus, textarea:focus, select:focus {
     margin: 0 !important; /* Zero margins to allow background to print edge-to-edge */
   }
 
+  /* Strictly align elements centered horizontally inside standard dimensions */
   .a4-page {
     width: 210mm !important;
     height: 295mm !important; /* Strict height slightly smaller than 297mm to prevent rounding breaks */
-    margin: 0 !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
@@ -280,16 +300,19 @@ input:focus, textarea:focus, select:focus {
     overflow: hidden !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    page-break-before: auto !important;
-    break-before: auto !important;
-    page-break-after: always !important;
-    break-after: page !important;
+    page-break-before: avoid !important;
+    break-before: avoid !important;
   }
 
-  /* Split exactly across page boundaries, leaving NO trailing blank pages */
-  .a4-page:last-child {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+  #preview-page-1 {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+
+  /* Isolated page break declarations avoiding legacy last-child override bugs */
+  .a4-page:not(:last-child) {
+    page-break-after: always !important;
+    break-after: page !important;
   }
 
   /* Tighter spacings and paddings during print to fit within A4 height (297mm) */
