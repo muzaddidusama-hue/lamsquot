@@ -1580,6 +1580,66 @@ function loadProfilePage() {
   document.getElementById('profile-page-web').value = user.web || '';
   document.getElementById('profile-page-auth-email').value = user.authEmail || '';
   document.getElementById('profile-page-password').value = user.password || '';
+
+  renderSalesTeamList();
+}
+
+async function renderSalesTeamList() {
+  const container = document.getElementById('profile-users-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+  
+  const activeUser = JSON.parse(localStorage.getItem('lams_active_user'));
+  const userDb = await db_getUserDb();
+
+  Object.values(userDb).forEach(u => {
+    const isSelf = activeUser && u.id === activeUser.id;
+    const div = document.createElement('div');
+    div.className = 'flex items-center justify-between p-3 bg-slate-950 border border-slate-850 rounded-xl';
+    div.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-slate-800 text-slate-350 font-bold flex items-center justify-center text-xs">
+          ${u.name ? u.name.charAt(0).toUpperCase() : 'U'}
+        </div>
+        <div class="text-left">
+          <div class="text-xs font-bold text-white flex items-center gap-1.5">
+            ${u.name} ${isSelf ? '<span class="text-[9px] bg-amber-500/10 text-amber-500 px-1.5 py-0.5 rounded border border-amber-500/20 uppercase font-black tracking-wider">You</span>' : ''}
+          </div>
+          <div class="text-[10px] text-slate-500 font-semibold">${u.title || 'Sales Representative'} • ${u.authEmail}</div>
+        </div>
+      </div>
+      ${!isSelf ? `
+        <button class="btn-delete-user text-slate-500 hover:text-rose-500 transition px-2.5 py-1.5 hover:bg-rose-500/5 rounded-lg border border-transparent hover:border-rose-500/10 text-xs" data-id="${u.id}">
+          <i class="fas fa-trash-can"></i>
+        </button>
+      ` : ''}
+    `;
+    
+    const delBtn = div.querySelector('.btn-delete-user');
+    if (delBtn) {
+      delBtn.addEventListener('click', async () => {
+        if (confirm(`Are you sure you want to delete the salesperson account for "${u.name}"?`)) {
+          const currentDb = await db_getUserDb();
+          delete currentDb[u.id];
+          
+          if (isFirebaseActive && cloudDb) {
+            try {
+              await cloudDb.collection('users').doc(u.id).delete();
+            } catch (e) {
+              console.error('Error deleting user from Firebase:', e);
+            }
+          }
+          localStorage.setItem('lams_user_db', JSON.stringify(currentDb));
+          
+          alert('Salesperson account deleted successfully.');
+          await renderSalesTeamList();
+        }
+      });
+    }
+    
+    container.appendChild(div);
+  });
 }
 
 async function saveProfilePageDetails(e) {
@@ -1655,6 +1715,52 @@ We are Looking forward for your kind order.`;
   document.getElementById('profile-page-form').addEventListener('submit', async (e) => {
     await saveProfilePageDetails(e);
   });
+
+  const addUserForm = document.getElementById('add-user-form');
+  if (addUserForm) {
+    addUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const newUsername = document.getElementById('new-user-username').value.trim().toLowerCase();
+      const newPassword = document.getElementById('new-user-password').value;
+      const newName = document.getElementById('new-user-name').value.trim();
+      const newTitle = document.getElementById('new-user-title').value.trim();
+      const newAuthEmail = document.getElementById('new-user-authemail').value.trim();
+      const newMobile = document.getElementById('new-user-mobile').value.trim();
+
+      const userDb = await db_getUserDb();
+
+      if (userDb[newUsername]) {
+        alert('This Username ID is already taken. Please choose another.');
+        return;
+      }
+
+      const emailExists = Object.values(userDb).some(u => u.authEmail && u.authEmail.toLowerCase() === newAuthEmail.toLowerCase());
+      if (emailExists) {
+        alert('This Authentication Email is already registered.');
+        return;
+      }
+
+      const newUser = {
+        id: newUsername,
+        password: newPassword,
+        authEmail: newAuthEmail,
+        name: newName,
+        title: newTitle,
+        mobile: newMobile,
+        email: newAuthEmail,
+        web: "www.lamspowerbd.com"
+      };
+
+      userDb[newUsername] = newUser;
+      localStorage.setItem('lams_user_db', JSON.stringify(userDb));
+      await db_saveUser(newUser);
+
+      alert(`Account for "${newName}" has been created successfully!`);
+      addUserForm.reset();
+      await renderSalesTeamList();
+    });
+  }
 
   // Navigate initial view
   await navigate(window.location.hash || '#welcome');

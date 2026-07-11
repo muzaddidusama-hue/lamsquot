@@ -36,3 +36,6 @@ out/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Firebase configuration containing actual credentials
+config.js

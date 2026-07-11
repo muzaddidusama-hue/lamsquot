@@ -264,6 +264,66 @@
           </div>
         </form>
       </div>
+
+      <!-- SALES TEAM MANAGEMENT -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-2xl relative overflow-hidden space-y-6 mt-6">
+        <div class="flex items-center gap-2 border-b border-slate-800 pb-4">
+          <i class="fas fa-users-gear text-amber-500 text-lg"></i>
+          <div>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Sales Team Accounts</h3>
+            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Add or remove salesperson accounts for this system</p>
+          </div>
+        </div>
+
+        <!-- Users List -->
+        <div class="space-y-2.5 max-h-60 overflow-y-auto pr-1" id="profile-users-list">
+          <!-- Loaded dynamically -->
+        </div>
+
+        <hr class="border-slate-800">
+
+        <!-- Add User Form -->
+        <form id="add-user-form" class="space-y-4">
+          <h4 class="text-xs font-bold text-amber-500 uppercase tracking-wider"><i class="fas fa-user-plus mr-1"></i> Add New Salesperson</h4>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="new-user-username" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Username ID</label>
+              <input type="text" id="new-user-username" placeholder="e.g. al_mahmud" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="new-user-password" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Login Password</label>
+              <input type="password" id="new-user-password" placeholder="e.g. secret123" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="new-user-name" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Full Name (Signature)</label>
+              <input type="text" id="new-user-name" placeholder="e.g. G. M. Al Mahmud" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="new-user-title" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Designation</label>
+              <input type="text" id="new-user-title" placeholder="e.g. Deputy Manager" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="new-user-authemail" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Authentication Email</label>
+              <input type="email" id="new-user-authemail" placeholder="e.g. al.mahmud@gmail.com" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+            <div>
+              <label for="new-user-mobile" class="block text-[9px] font-bold text-slate-500 uppercase mb-1">Mobile No.</label>
+              <input type="text" id="new-user-mobile" placeholder="e.g. 01712345678" class="w-full bg-slate-950 border border-slate-850 focus:border-amber-500 focus:outline-none rounded px-2.5 py-1.5 text-xs text-slate-200" required>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-amber-400 font-bold py-2 rounded-lg text-xs tracking-wider transition active:scale-98">
+            <i class="fas fa-plus mr-1"></i> Add Salesperson Account
+          </button>
+        </form>
+      </div>
     </main>
   </div>
 
