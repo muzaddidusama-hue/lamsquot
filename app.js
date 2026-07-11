@@ -847,6 +847,25 @@ async function db_getSavedQuotations() {
       snap.forEach(doc => {
         list.push(doc.data());
       });
+      
+      // Auto-sync any local offline quotations to Firestore
+      const localQuotes = JSON.parse(localStorage.getItem('lams_saved_quotations')) || [];
+      if (localQuotes.length > 0) {
+        for (const localQuote of localQuotes) {
+          const exists = list.some(q => q.id === localQuote.id);
+          if (!exists) {
+            console.log('Syncing offline quotation to Firebase Firestore:', localQuote.id);
+            try {
+              await cloudDb.collection('quotations').doc(localQuote.id).set(localQuote);
+              list.push(localQuote);
+            } catch (syncErr) {
+              console.error('Failed to sync quotation:', localQuote.id, syncErr);
+            }
+          }
+        }
+        localStorage.removeItem('lams_saved_quotations');
+      }
+      
       return list;
     } catch (e) {
       console.error('Error fetching quotations from Firebase Firestore:', e);
