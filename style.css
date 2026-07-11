@@ -278,11 +278,9 @@ input:focus, textarea:focus, select:focus {
   }
 
   .a4-page {
-    width: 100% !important;
-    max-width: 210mm !important;
-    height: 99.2vh !important;
-    max-height: 297mm !important;
-    margin: 0 auto !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
