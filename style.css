@@ -228,41 +228,32 @@ input:focus, textarea:focus, select:focus {
     display: none !important;
   }
 
-  body, html {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: auto !important;
-    width: 100% !important;
-    overflow: visible !important;
-  }
-
-  /* Collapse layout parent containers to let A4 pages flow naturally */
+  /* Reset and flatten all parent containers to strictly static block-level to enable page breaks */
+  html,
+  body,
   #editor-view,
   main,
   #editor-preview,
-  #preview-viewport {
+  #preview-viewport,
+  #pages-zoom-wrapper {
     display: block !important;
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
-    height: auto !important;
-    width: 100% !important;
-    position: static !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
-  }
-
-  #pages-zoom-wrapper {
+    color: #000000 !important;
     transform: none !important;
     gap: 0 !important;
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: auto !important;
+  }
+
+  html, body {
+    background-color: #ffffff !important;
   }
 
   /* Ensure background graphics are printed */
@@ -279,7 +270,7 @@ input:focus, textarea:focus, select:focus {
 
   .a4-page {
     width: 210mm !important;
-    height: 285mm !important;
+    height: 295mm !important; /* Strict height slightly smaller than 297mm to prevent rounding breaks */
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
@@ -288,12 +279,17 @@ input:focus, textarea:focus, select:focus {
     position: relative !important;
     overflow: hidden !important;
     page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
     page-break-after: always !important;
+    break-after: page !important;
   }
 
   /* Split exactly across page boundaries, leaving NO trailing blank pages */
   .a4-page:last-child {
     page-break-after: avoid !important;
+    break-after: avoid !important;
   }
 
   /* Tighter spacings and paddings during print to fit within A4 height (297mm) */
