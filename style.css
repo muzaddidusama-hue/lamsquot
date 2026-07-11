@@ -223,6 +223,7 @@ input:focus, textarea:focus, select:focus {
   #login-view,
   #welcome-view,
   #profile-view,
+  #editor-sidebar,
   #preview-controls-panel {
     display: none !important;
   }
@@ -323,10 +324,24 @@ input:focus, textarea:focus, select:focus {
   }
 
   /* Make sure the zoom scaling preview fits screen width */
-  #pages-zoom-wrapper {
-    width: 100% !important;
+  #preview-viewport {
+    display: block !important;
     overflow-x: auto !important;
+    overflow-y: auto !important;
     padding: 10px !important;
+    text-align: left !important;
+  }
+  
+  #pages-zoom-wrapper {
+    transform-origin: top left !important;
+    display: inline-block !important;
+    width: 210mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .a4-page {
+    margin-bottom: 20px !important;
   }
 
   /* Shrink text sizing and paddings for mobile grids */

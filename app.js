@@ -401,6 +401,20 @@ function initEditors() {
   document.getElementById('btn-add-item').addEventListener('click', addNewItemRow);
   document.getElementById('btn-add-term').addEventListener('click', addNewTermRow);
 
+  // Auto-fit zoom for mobile preview at startup
+  if (window.innerWidth < 768) {
+    state.zoom = Math.floor((window.innerWidth - 32) / 7.94);
+    if (state.zoom < 30) state.zoom = 30;
+    if (state.zoom > 60) state.zoom = 60;
+  }
+  
+  adjustZoom(state.zoom);
+  document.getElementById('zoom-slider').value = state.zoom;
+  if (document.getElementById('range-preview-zoom')) {
+    document.getElementById('range-preview-zoom').value = state.zoom;
+    document.getElementById('val-preview-zoom').innerText = state.zoom + '%';
+  }
+
   renderTermsEditor();
   renderItemsEditor();
 }
