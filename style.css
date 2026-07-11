@@ -306,7 +306,7 @@ input:focus, textarea:focus, select:focus {
 /* ==========================================================================
    MOBILE RESPONSIVENESS OVERRIDES
    ========================================================================== */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .mobile-hidden {
     display: none !important;
   }

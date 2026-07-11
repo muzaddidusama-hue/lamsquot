@@ -402,7 +402,7 @@ function initEditors() {
   document.getElementById('btn-add-term').addEventListener('click', addNewTermRow);
 
   // Auto-fit zoom for mobile preview at startup
-  if (window.innerWidth < 768) {
+  if (window.innerWidth < 1024) {
     state.zoom = Math.floor((window.innerWidth - 32) / 7.94);
     if (state.zoom < 30) state.zoom = 30;
     if (state.zoom > 60) state.zoom = 60;
