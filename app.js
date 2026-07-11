@@ -43,14 +43,6 @@ const state = {
     { id: '5', name: 'Cable & Structure', brand: '', model: '', capacity: 'As Needed', qty: '', price: '' },
     { id: '6', name: 'Miscellaneous', brand: '', model: '', capacity: '', qty: '', price: '' }
   ],
-  specs: [
-    { parameter: 'Solar Panel Brand & Type', detail: 'AE Solar Mono-Crystalline' },
-    { parameter: 'Inverter Brand & Model', detail: 'Talegent SunMate 1000' },
-    { parameter: 'Lithium Battery Brand', detail: 'DJDC 12V 50Ah' },
-    { parameter: 'System Mounting Structure', detail: 'Hot Dip Galvanized Steel' },
-    { parameter: 'DC Cable & Connectors', detail: 'Premium Copper XLPE' },
-    { parameter: 'AC Cables & Breakers', detail: 'Standard Breaker MCB' }
-  ],
   zoom: 75,
   contentScale: 100, // content scale factor percentage
   margins: {
@@ -405,14 +397,12 @@ function initEditors() {
     }
   });
 
-  // Add Item / Spec / Term click handlers
+  // Add Item / Term click handlers
   document.getElementById('btn-add-item').addEventListener('click', addNewItemRow);
-  document.getElementById('btn-add-spec').addEventListener('click', addNewSpecRow);
   document.getElementById('btn-add-term').addEventListener('click', addNewTermRow);
 
   renderTermsEditor();
   renderItemsEditor();
-  renderSpecsEditor();
 }
 
 function adjustZoom(val) {
@@ -560,49 +550,7 @@ function addNewItemRow() {
   updatePreview();
 }
 
-function renderSpecsEditor() {
-  const container = document.getElementById('specs-editor-container');
-  container.innerHTML = '';
-  state.specs.forEach((spec, idx) => {
-    const div = document.createElement('div');
-    div.className = 'grid grid-cols-2 gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-850';
-    div.innerHTML = `
-      <input type="text" class="bg-transparent text-xs text-slate-200 font-semibold border-b border-transparent focus:border-amber-500 focus:outline-none" value="${spec.parameter}">
-      <div class="flex items-center justify-between gap-1">
-        <input type="text" class="flex-1 bg-transparent text-xs text-slate-300 border-b border-transparent focus:border-amber-500 focus:outline-none" value="${spec.detail}">
-        <button class="text-slate-500 hover:text-rose-500 transition px-1"><i class="fas fa-trash-can"></i></button>
-      </div>
-    `;
-    
-    // Wire up events
-    const paramInput = div.querySelectorAll('input')[0];
-    const detailInput = div.querySelectorAll('input')[1];
-    
-    paramInput.addEventListener('input', (e) => {
-      state.specs[idx].parameter = e.target.value;
-      updatePreview();
-    });
-    detailInput.addEventListener('input', (e) => {
-      state.specs[idx].detail = e.target.value;
-      updatePreview();
-    });
-    
-    const delBtn = div.querySelector('button');
-    delBtn.addEventListener('click', () => {
-      state.specs.splice(idx, 1);
-      renderSpecsEditor();
-      updatePreview();
-    });
-    
-    container.appendChild(div);
-  });
-}
 
-function addNewSpecRow() {
-  state.specs.push({ parameter: 'New Parameter', detail: 'Technical specification description details.' });
-  renderSpecsEditor();
-  updatePreview();
-}
 
 // ==========================================================================
 // RENDER & SYNC VISUAL PREVIEW (RIGHT COLUMN)
@@ -1350,7 +1298,6 @@ function loadQuotationIntoState(quote) {
   document.documentElement.style.setProperty('--content-scale', state.margins.scale);
 
   renderItemsEditor();
-  renderSpecsEditor();
   calculateBOMTotal();
   updatePreview();
 }
