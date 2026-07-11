@@ -325,11 +325,11 @@ input:focus, textarea:focus, select:focus {
 
   /* Tighter spacings and paddings during print to fit within A4 height (297mm) */
   .a4-page-content {
-    --margin-top: 45mm !important;
-    --margin-bottom: 48mm !important;
-    --margin-side: 20mm !important;
-    font-size: calc(12px * var(--content-scale)) !important;
-    line-height: 1.4 !important;
+    --margin-top: 55mm !important;
+    --margin-bottom: 60mm !important;
+    --margin-side: 25mm !important;
+    font-size: calc(12.5px * var(--content-scale)) !important;
+    line-height: 1.45 !important;
   }
   
   .a4-page-content p {
