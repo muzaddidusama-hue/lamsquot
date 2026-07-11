@@ -213,18 +213,17 @@ input:focus, textarea:focus, select:focus {
    PRINT MEDIA STYLESHEET
    ========================================================================== */
 @media print {
-  /* Hide the dashboard, header, preview control bar, and interactive buttons */
-  header,
-  nav,
-  section:first-of-type,
-  .bg-slate-900,
-  button,
-  input[type="range"],
+  /* Explicitly remove all non-print layouts from display flow */
   #login-view,
   #welcome-view,
   #profile-view,
   #editor-sidebar,
-  #preview-controls-panel {
+  #editor-view > header,
+  #preview-controls-panel,
+  header,
+  nav,
+  button,
+  input[type="range"] {
     display: none !important;
   }
 
@@ -234,33 +233,25 @@ input:focus, textarea:focus, select:focus {
     margin: 0 !important;
     padding: 0 !important;
     height: auto !important;
-    width: auto !important;
-    overflow: visible !important;
-    display: block !important;
-  }
-
-  /* Reset layout wrapper container rules */
-  main, #editor-view {
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: visible !important;
-    height: auto !important;
-    width: auto !important;
-    position: static !important;
-  }
-
-  /* Flatten layout components and remove scrolling and flex grids */
-  section:last-of-type,
-  section:last-of-type > div {
-    display: block !important;
     width: 100% !important;
-    height: auto !important;
-    background-color: #ffffff !important;
-    padding: 0 !important;
-    margin: 0 !important;
     overflow: visible !important;
+  }
+
+  /* Collapse layout parent containers to let A4 pages flow naturally */
+  #editor-view,
+  main,
+  #editor-preview,
+  #preview-viewport {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
     position: static !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   #pages-zoom-wrapper {
@@ -289,17 +280,19 @@ input:focus, textarea:focus, select:focus {
     width: 210mm !important;
     height: 297mm !important;
     margin: 0 !important;
+    padding: 0 !important;
     box-shadow: none !important;
     border: none !important;
     background-color: #ffffff !important;
     position: relative !important;
     overflow: hidden !important;
     page-break-inside: avoid !important;
+    page-break-after: always !important;
   }
 
   /* Split exactly across page boundaries, leaving NO trailing blank pages */
-  .a4-page:not(:last-child) {
-    page-break-after: always !important;
+  .a4-page:last-child {
+    page-break-after: avoid !important;
   }
 }
 
