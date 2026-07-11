@@ -301,3 +301,45 @@ input:focus, textarea:focus, select:focus {
     page-break-after: always !important;
   }
 }
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS OVERRIDES
+   ========================================================================== */
+@media (max-width: 767px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  /* Prevent scrolling layout locks on mobile */
+  body, html {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  
+  #login-view, #welcome-view, #profile-view, #editor-view {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Make sure the zoom scaling preview fits screen width */
+  #pages-zoom-wrapper {
+    width: 100% !important;
+    overflow-x: auto !important;
+    padding: 10px !important;
+  }
+
+  /* Shrink text sizing and paddings for mobile grids */
+  .p-8 {
+    padding: 1.25rem !important;
+  }
+}
+
+/* Hide scrollbar for clean dashboard horizontal sliders */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

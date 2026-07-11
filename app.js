@@ -1229,6 +1229,7 @@ async function navigate(hash) {
     if (!activeQuotationId) {
       await createNewQuotation();
     }
+    showMobileEdit();
   }
 
   // Sync session salesperson details
@@ -1642,6 +1643,40 @@ async function renderSalesTeamList() {
   });
 }
 
+function showMobileEdit() {
+  const mobileToggleEdit = document.getElementById('mobile-toggle-edit');
+  const mobileTogglePreview = document.getElementById('mobile-toggle-preview');
+  const editorSidebar = document.getElementById('editor-sidebar');
+  const editorPreview = document.getElementById('editor-preview');
+
+  if (editorSidebar) editorSidebar.classList.remove('mobile-hidden');
+  if (editorPreview) editorPreview.classList.add('mobile-hidden');
+  
+  if (mobileToggleEdit) {
+    mobileToggleEdit.className = 'flex-1 py-3 text-center text-amber-500 border-b-2 border-amber-500 bg-slate-900/50 transition';
+  }
+  if (mobileTogglePreview) {
+    mobileTogglePreview.className = 'flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition';
+  }
+}
+
+function showMobilePreview() {
+  const mobileToggleEdit = document.getElementById('mobile-toggle-edit');
+  const mobileTogglePreview = document.getElementById('mobile-toggle-preview');
+  const editorSidebar = document.getElementById('editor-sidebar');
+  const editorPreview = document.getElementById('editor-preview');
+
+  if (editorSidebar) editorSidebar.classList.add('mobile-hidden');
+  if (editorPreview) editorPreview.classList.remove('mobile-hidden');
+  
+  if (mobileTogglePreview) {
+    mobileTogglePreview.className = 'flex-1 py-3 text-center text-amber-500 border-b-2 border-amber-500 bg-slate-900/50 transition';
+  }
+  if (mobileToggleEdit) {
+    mobileToggleEdit.className = 'flex-1 py-3 text-center text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition';
+  }
+}
+
 async function saveProfilePageDetails(e) {
   e.preventDefault();
   const user = JSON.parse(localStorage.getItem('lams_active_user'));
@@ -1760,6 +1795,17 @@ We are Looking forward for your kind order.`;
       addUserForm.reset();
       await renderSalesTeamList();
     });
+  }
+
+  // Mobile Panel Toggle Switchers (Editor vs Preview)
+  const mobileToggleEdit = document.getElementById('mobile-toggle-edit');
+  const mobileTogglePreview = document.getElementById('mobile-toggle-preview');
+  
+  if (mobileToggleEdit) {
+    mobileToggleEdit.addEventListener('click', showMobileEdit);
+  }
+  if (mobileTogglePreview) {
+    mobileTogglePreview.addEventListener('click', showMobilePreview);
   }
 
   // Navigate initial view
