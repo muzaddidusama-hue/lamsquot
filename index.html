@@ -398,7 +398,7 @@
   <!-- MAIN WORKSPACE -->
   <main class="flex flex-col lg:flex-row flex-1 overflow-hidden">
     <!-- Mobile Workspace Panel Switcher -->
-    <div class="lg:hidden flex bg-slate-950 border-b border-slate-850 shrink-0 font-bold text-xs select-none relative z-10">
+    <div id="mobile-tab-switcher" class="lg:hidden flex bg-slate-950 border-b border-slate-850 shrink-0 font-bold text-xs select-none relative z-10">
       <button id="mobile-toggle-edit" class="flex-1 py-3 text-center text-amber-500 border-b-2 border-amber-500 bg-slate-900/50 transition">
         <i class="fas fa-pen-to-square mr-1"></i> Edit parameters
       </button>
@@ -710,7 +710,7 @@
       </div>
 
       <!-- Preview Pages Scroller -->
-      <div class="flex-1 overflow-y-auto p-8 flex flex-col items-center gap-8 relative select-none">
+      <div id="preview-viewport" class="flex-1 overflow-y-auto p-8 flex flex-col items-center gap-8 relative select-none">
         
         <!-- Transform Wrapper for scaling -->
         <div id="pages-zoom-wrapper" class="origin-top transition-transform duration-100 flex flex-col items-center gap-8" style="transform: scale(0.75);">
