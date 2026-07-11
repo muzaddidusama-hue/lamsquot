@@ -122,6 +122,14 @@ input:focus, textarea:focus, select:focus {
   box-sizing: border-box;
 }
 
+/* Force hardcoded Tailwind font-size classes to inherit the page scale dynamically */
+.a4-page-content [class*="text-[12.5px]"] {
+  font-size: 1em !important;
+}
+.a4-page-content [class*="text-[12px]"] {
+  font-size: 0.96em !important;
+}
+
 /* Page 2 Parameter Box (Orange Double Border & Orange Filled Header) */
 .parameter-box {
   border: 3.5px double #f97316; /* Orange double border */
