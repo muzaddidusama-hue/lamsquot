@@ -989,7 +989,7 @@ function initAuth() {
             title: 'Sales Representative, LAMS POWER',
             mobile: gUser.phoneNumber || '',
             email: gUser.email,
-            web: 'www.lamspowerbd.com'
+            web: 'www.lamspower.pro.bd'
           };
           await db_saveUser(matchedUser);
         }
@@ -1064,18 +1064,18 @@ function initAuth() {
               title: 'Deputy Manager - Engineering, LAMS POWER',
               mobile: '01712345678',
               email: 'al.mahmud.google@gmail.com',
-              web: 'www.lamspowerbd.com'
+              web: 'www.lamspower.pro.bd'
             };
           } else {
             userProfile = {
               id: 'usama_google',
               password: 'password123',
               authEmail: 'ubh.muzaddid17@gmail.com',
-              name: 'Usama Bin Hasan (Google)',
+              name: 'Usama Bin Hasan',
               title: 'Team Lead - Brand and Promotion, LAMS POWER',
               mobile: '01521546444',
               email: 'ubh.muzaddid17@gmail.com',
-              web: 'www.lamspowerbd.com'
+              web: 'www.lamspower.pro.bd'
             };
           }
 
