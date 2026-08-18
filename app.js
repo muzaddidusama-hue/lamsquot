@@ -9,10 +9,10 @@ const state = {
   refCode: 'LAMS/OFF/JUN/242026',
   date: '24/06/2026',
   customer: {
-    name: 'Al Mahmud',
-    address: 'Mirpur 10, Dhaka.'
+    name: 'Customer Name',
+    address: 'Customer Address'
   },
-  capacity: '400W', // Solar System Capacity for Page 1 & Subject
+  capacity: '00W', // Solar System Capacity for Page 1 & Subject
   overviewCapacity: '', // Capacity header for Page 2 (empty defaults to system capacity)
   salesperson: {
     name: 'Usama Bin Hasan',
@@ -21,7 +21,7 @@ const state = {
     email: 'ubh.muzaddid17@gmail.com',
     authEmail: 'ubh.muzaddid17@gmail.com',
     password: 'password123',
-    web: 'www.lamspowerbd.com'
+    web: 'www.lamspower.pro.bd'
   },
   overview: {
     panelModel: '550Watt Mono',
